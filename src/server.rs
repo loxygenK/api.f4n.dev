@@ -44,19 +44,17 @@ impl Host<'_> {
     }
 }
 
-pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentError> {
-    let segmented_ip = host.to_segmented_ip_addr()?;
-
-    #[cfg(debug_assertions)]
-    println!(
-        "🧙 Serving from http://{}:{}",
-        segmented_ip
+impl ToString for Host<'_> {
+    fn to_string(&self) -> String {
+        self.to_segmented_ip_addr()
+            .expect("Invalid IP Address provided")
             .iter()
             .map(|x| x.to_string())
             .collect::<Vec<String>>()
-            .join("."),
-        port
-    );
+            .join(".")
+    }
+}
+
     let log = warp::log(logger::LOGGER_NAME);
 
     let graphql_filter = juniper_warp::make_graphql_filter(
