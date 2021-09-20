@@ -1,4 +1,4 @@
-mod controller;
+mod service;
 mod domain;
 mod server;
 

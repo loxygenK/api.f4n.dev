@@ -3,8 +3,8 @@ use std::num::ParseIntError;
 
 use warp::Filter;
 
-use crate::controller::generate_scheme;
-use crate::controller::state::provide_context;
+use crate::service::generate_scheme;
+use crate::service::state::provide_context;
 
 #[derive(Debug)]
 pub enum ToSegmentError {
