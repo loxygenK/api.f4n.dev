@@ -3,6 +3,7 @@ use std::num::ParseIntError;
 
 use warp::Filter;
 
+use crate::logger;
 use crate::service::generate_scheme;
 use crate::service::state::provide_context;
 
@@ -56,19 +57,20 @@ pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentEr
             .join("."),
         port
     );
+    let log = warp::log(logger::LOGGER_NAME);
 
-    let logger = warp::log("portfolio_api_server");
     let graphql_filter = juniper_warp::make_graphql_filter(
         generate_scheme(),
         warp::any().map(move || provide_context()).boxed()
     );
+    logger::info(format!("🧙 Serving from http://{}:{}", host.to_string(), port));
 
     Ok(warp::serve(
         warp::get()
             .and(warp::path("graphiql"))
             .and(juniper_warp::graphiql_filter("/graphql", None))
             .or(warp::path("graphql").and(graphql_filter))
-            .with(logger)
+            .with(log)
     )
     .run((segmented_ip, port))
     .await)
