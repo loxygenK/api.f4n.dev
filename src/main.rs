@@ -1,4 +1,5 @@
 mod server;
+mod model;
 
 use server::execute_server;
 
