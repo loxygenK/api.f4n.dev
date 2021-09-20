@@ -1,8 +1,10 @@
 use std::convert::TryInto;
 use std::num::ParseIntError;
 
+use log::Level;
 use warp::Filter;
 
+use crate::logger;
 use crate::service::generate_scheme;
 use crate::service::state::provide_context;
 
@@ -43,33 +45,39 @@ impl Host<'_> {
     }
 }
 
-pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentError> {
-    let segmented_ip = host.to_segmented_ip_addr()?;
-
-    #[cfg(debug_assertions)]
-    println!(
-        "🧙 Serving from http://{}:{}",
-        segmented_ip
+impl ToString for Host<'_> {
+    fn to_string(&self) -> String {
+        self.to_segmented_ip_addr()
+            .expect("Invalid IP Address provided")
             .iter()
             .map(|x| x.to_string())
             .collect::<Vec<String>>()
-            .join("."),
-        port
-    );
+            .join(".")
+    }
+}
 
-    let logger = warp::log("portfolio_api_server");
+pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentError> {
+    let log = warp::log(logger::LOGGER_NAME);
+
+    let scheme = generate_scheme();
+    let scheme_lang = scheme.as_schema_language();
     let graphql_filter = juniper_warp::make_graphql_filter(
-        generate_scheme(),
+        scheme,
         warp::any().map(move || provide_context()).boxed()
     );
 
-    Ok(warp::serve(
+    logger::info(format!("🧙 Serving from http://{}:{}", host.to_string(), port));
+
+    warp::serve(
         warp::get()
             .and(warp::path("graphiql"))
             .and(juniper_warp::graphiql_filter("/graphql", None))
             .or(warp::path("graphql").and(graphql_filter))
-            .with(logger)
+            .or(warp::path("scheme").map(move || scheme_lang.clone()))
+            .with(log)
     )
-    .run((segmented_ip, port))
-    .await)
+    .run((host.to_segmented_ip_addr()?, port))
+    .await;
+
+    Ok(())
 }
