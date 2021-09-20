@@ -1,5 +1,6 @@
+mod controller;
+mod domain;
 mod server;
-mod model;
 
 use server::execute_server;
 

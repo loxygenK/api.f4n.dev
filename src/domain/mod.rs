@@ -1,3 +1,1 @@
-mod basic;
-
-pub use basic::Basic;
+pub mod basic;
