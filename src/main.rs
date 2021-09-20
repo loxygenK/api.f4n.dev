@@ -1,3 +1,5 @@
+mod service;
+mod domain;
 mod server;
 
 use server::execute_server;

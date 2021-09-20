@@ -1,7 +1,10 @@
 use std::convert::TryInto;
-use std::{error::Error, num::ParseIntError};
+use std::num::ParseIntError;
 
 use warp::Filter;
+
+use crate::service::generate_scheme;
+use crate::service::state::provide_context;
 
 #[derive(Debug)]
 pub enum ToSegmentError {
@@ -9,6 +12,7 @@ pub enum ToSegmentError {
     LengthError(usize),
 }
 
+#[allow(unused)]
 pub enum Host<'a> {
     Localhost,
     Ipv4(&'a str),
@@ -53,10 +57,18 @@ pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentEr
         port
     );
 
+    let logger = warp::log("portfolio_api_server");
+    let graphql_filter = juniper_warp::make_graphql_filter(
+        generate_scheme(),
+        warp::any().map(move || provide_context()).boxed()
+    );
+
     Ok(warp::serve(
         warp::get()
             .and(warp::path("graphiql"))
-            .and(juniper_warp::graphiql_filter("/graphql", None)),
+            .and(juniper_warp::graphiql_filter("/graphql", None))
+            .or(warp::path("graphql").and(graphql_filter))
+            .with(logger)
     )
     .run((segmented_ip, port))
     .await)
