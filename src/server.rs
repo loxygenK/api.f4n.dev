@@ -3,6 +3,8 @@ use std::{error::Error, num::ParseIntError};
 
 use warp::Filter;
 
+use crate::controller::generate_scheme;
+
 #[derive(Debug)]
 pub enum ToSegmentError {
     ValueError(ParseIntError),
@@ -53,10 +55,13 @@ pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentEr
         port
     );
 
+    let graphql_filter = juniper_warp::make_graphql_filter(generate_scheme(), warp::any().map(move || ()).boxed());
+
     Ok(warp::serve(
         warp::get()
             .and(warp::path("graphiql"))
-            .and(juniper_warp::graphiql_filter("/graphql", None)),
+            .and(juniper_warp::graphiql_filter("/graphql", None))
+            .or(warp::path("graphql").and(graphql_filter))
     )
     .run((segmented_ip, port))
     .await)
