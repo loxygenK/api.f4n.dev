@@ -2,11 +2,11 @@ use juniper::{graphql_object, FieldResult};
 
 use crate::domain::basic::{Affiliation, Basic, Name};
 
-use super::QueryRoot;
+use super::{QueryRoot, state::State};
 
-#[graphql_object]
+#[graphql_object(context = State)]
 impl QueryRoot {
-    fn basic() -> FieldResult<Basic> {
+    fn basic(_state: &State) -> FieldResult<Basic> {
         Ok(Basic::new(
             Name::new(
                 "loxygen.k".to_string(),
