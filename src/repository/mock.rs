@@ -18,7 +18,7 @@ impl Repository for AssetRepository {
     }
 
     fn fetch_contacts(&self) -> RepositoryResult<Vec<Contact>> {
-        serialize_yaml("asset/content.yaml")
+        serialize_yaml("asset/contact.yaml")
     }
 
     fn fetch_skills(&self) -> RepositoryResult<Vec<Skill>> {
