@@ -1,6 +1,7 @@
 mod domain;
 mod logger;
 mod repository;
+mod router;
 mod server;
 mod service;
 

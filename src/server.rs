@@ -4,8 +4,8 @@ use std::num::ParseIntError;
 use warp::Filter;
 
 use crate::logger;
-use crate::service::generate_scheme;
-use crate::service::state::provide_context;
+use crate::router::generate_scheme;
+use crate::router::state::provide_context;
 
 #[derive(Debug)]
 pub enum ToSegmentError {
