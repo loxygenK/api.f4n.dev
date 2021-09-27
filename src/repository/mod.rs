@@ -9,7 +9,7 @@ pub enum RepositoryError {
 
 type RepositoryResult<T> = Result<T, RepositoryError>;
 
-pub trait Repository {
+pub trait Repository: Send + Sync {
     fn fetch_basic(&self) -> RepositoryResult<Basic>;
     fn fetch_careers(&self) -> RepositoryResult<Vec<Career>>;
     fn fetch_contacts(&self) -> RepositoryResult<Vec<Contact>>;
