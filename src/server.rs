@@ -1,7 +1,6 @@
 use std::convert::TryInto;
 use std::num::ParseIntError;
 
-use log::Level;
 use warp::Filter;
 
 use crate::logger;
@@ -63,10 +62,14 @@ pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentEr
     let scheme_lang = scheme.as_schema_language();
     let graphql_filter = juniper_warp::make_graphql_filter(
         scheme,
-        warp::any().map(move || provide_context()).boxed()
+        warp::any().map(move || provide_context()).boxed(),
     );
 
-    logger::info(format!("🧙 Serving from http://{}:{}", host.to_string(), port));
+    logger::info(format!(
+        "🧙 Serving from http://{}:{}",
+        host.to_string(),
+        port
+    ));
 
     warp::serve(
         warp::get()
@@ -74,7 +77,7 @@ pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentEr
             .and(juniper_warp::graphiql_filter("/graphql", None))
             .or(warp::path("graphql").and(graphql_filter))
             .or(warp::path("scheme").map(move || scheme_lang.clone()))
-            .with(log)
+            .with(log),
     )
     .run((host.to_segmented_ip_addr()?, port))
     .await;
