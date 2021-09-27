@@ -1,6 +1,7 @@
 use juniper::GraphQLObject;
+use serde::{Serialize, Deserialize};
 
-#[derive(GraphQLObject)]
+#[derive(GraphQLObject, Serialize, Deserialize)]
 pub struct Basic {
     name: Name,
     introduction: String,
@@ -19,7 +20,7 @@ impl Basic {
     }
 }
 
-#[derive(GraphQLObject)]
+#[derive(GraphQLObject, Serialize, Deserialize)]
 pub struct Name {
     primary: String,
     aka: Vec<String>,
@@ -31,7 +32,7 @@ impl Name {
     }
 }
 
-#[derive(GraphQLObject)]
+#[derive(GraphQLObject, Serialize, Deserialize)]
 pub struct Affiliation {
     location: String,
     assign: String,

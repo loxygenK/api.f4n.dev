@@ -1,4 +1,6 @@
-#[derive(juniper::GraphQLObject)]
+use serde::{Serialize, Deserialize};
+
+#[derive(juniper::GraphQLObject, Serialize, Deserialize)]
 pub struct Contact {
     service: String,
     identifier: String,

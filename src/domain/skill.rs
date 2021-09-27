@@ -1,4 +1,6 @@
-#[derive(juniper::GraphQLEnum)]
+use serde::{Serialize, Deserialize};
+
+#[derive(juniper::GraphQLEnum, Serialize, Deserialize)]
 pub enum SkillType {
     Frontend,
     Backend,
@@ -7,7 +9,7 @@ pub enum SkillType {
     Miscellaneous,
 }
 
-#[derive(juniper::GraphQLEnum)]
+#[derive(juniper::GraphQLEnum, Serialize, Deserialize)]
 pub enum SkilledLevel {
     NoLongerUsed,
     Advanced,
@@ -16,7 +18,7 @@ pub enum SkilledLevel {
     Studying,
 }
 
-#[derive(juniper::GraphQLObject)]
+#[derive(juniper::GraphQLObject, Serialize, Deserialize)]
 pub struct Skill {
     name: String,
     skill_type: SkillType,
