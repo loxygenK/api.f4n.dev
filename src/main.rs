@@ -1,5 +1,6 @@
 mod domain;
 mod logger;
+mod repository;
 mod server;
 mod service;
 
