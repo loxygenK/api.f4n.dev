@@ -6,7 +6,7 @@ use serde::de::DeserializeOwned;
 
 use super::{Repository, RepositoryError, RepositoryResult};
 
-struct AssetRepository;
+pub struct AssetRepository;
 
 impl Repository for AssetRepository {
     fn fetch_basic(&self) -> RepositoryResult<Basic> {
