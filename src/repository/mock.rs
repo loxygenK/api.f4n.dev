@@ -1,6 +1,10 @@
 use crate::domain::{basic::Basic, career::Career, contact::Contact, skill::Skill, work::Work};
 
-use super::{Repository, RepositoryResult, util::serialize_yaml};
+use std::{fs::File, io::BufReader};
+
+use serde::de::DeserializeOwned;
+
+use super::{Repository, RepositoryError, RepositoryResult};
 
 struct AssetRepository;
 
@@ -24,4 +28,16 @@ impl Repository for AssetRepository {
     fn fetch_works() -> RepositoryResult<Vec<Work>> {
         serialize_yaml("asset/work.yaml")
     }
+}
+
+pub fn serialize_yaml<T: DeserializeOwned>(file_name: &str) -> RepositoryResult<T> {
+    let file = File::open(file_name)
+        .map_err(|e| RepositoryError::RetrievingError(e))?;
+
+    let reader = BufReader::new(file);
+
+    let result = serde_yaml::from_reader(reader)
+        .map_err(|e| RepositoryError::DeserializationError(e))?;
+
+    Ok(result)
 }

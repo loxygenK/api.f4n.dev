@@ -1,7 +1,6 @@
 use crate::domain::{basic::Basic, career::Career, contact::Contact, skill::Skill, work::Work};
 
 pub mod mock;
-mod util;
 
 pub enum RepositoryError {
     RetrievingError(std::io::Error),
