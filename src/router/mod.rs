@@ -2,13 +2,16 @@ pub mod state;
 
 use juniper::{EmptyMutation, EmptySubscription, FieldResult};
 
-use crate::{domain::{
-    basic::{Affiliation, Basic, Name},
-    career::Career,
-    contact::Contact,
-    skill::{Skill, SkillType, SkilledLevel},
-    work::{Status, Work},
-}, repository::Repository, service::Service};
+use crate::{
+    domain::{
+        basic::{Affiliation, Basic, Name},
+        career::Career,
+        contact::Contact,
+        skill::{Skill, SkillType, SkilledLevel},
+        work::{Status, Work},
+    },
+    service::Service,
+};
 
 use self::state::State;
 
@@ -16,7 +19,7 @@ pub type GraphQLScheme =
     juniper::RootNode<'static, Query, EmptyMutation<State>, EmptySubscription<State>>;
 
 pub struct Query {
-    service: Service
+    service: Service,
 }
 
 #[juniper::graphql_object(context = State)]
