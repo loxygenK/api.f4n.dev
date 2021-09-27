@@ -1,5 +1,5 @@
-- when: "2019-4-1Z"
+- when: "2019-04-01T00:00:00Z"
   title: "Enter to NITIC"
 
-- when: "2019-4-7Z"
+- when: "2019-04-07T00:00:00Z"
   title: "Transcendense"
