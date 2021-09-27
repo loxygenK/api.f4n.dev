@@ -14,7 +14,7 @@ impl Display for RepositoryError {
 }
 
 pub struct Service {
-    repository: dyn Repository
+    repository: Box<dyn Repository>,
 }
 
 type ServiceResult<T> = Result<T, String>;
