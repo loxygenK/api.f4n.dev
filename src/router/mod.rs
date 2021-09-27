@@ -1,32 +1,26 @@
+pub mod state;
+
 use juniper::{EmptyMutation, EmptySubscription, FieldResult};
 
-use crate::domain::{
+use crate::{domain::{
     basic::{Affiliation, Basic, Name},
     career::Career,
     contact::Contact,
     skill::{Skill, SkillType, SkilledLevel},
     work::{Status, Work},
-};
+}, repository::Repository, service::Service};
 
 use self::state::State;
 
-pub mod state;
-
 pub type GraphQLScheme =
-    juniper::RootNode<'static, QueryRoot, EmptyMutation<State>, EmptySubscription<State>>;
+    juniper::RootNode<'static, Query, EmptyMutation<State>, EmptySubscription<State>>;
 
-pub fn generate_scheme() -> GraphQLScheme {
-    GraphQLScheme::new(
-        QueryRoot,
-        EmptyMutation::<State>::new(),
-        EmptySubscription::<State>::new(),
-    )
+pub struct Query {
+    service: Service
 }
 
-pub struct QueryRoot;
-
 #[juniper::graphql_object(context = State)]
-impl QueryRoot {
+impl Query {
     fn basic(_state: &State) -> FieldResult<Basic> {
         Ok(Basic::new(
             Name::new("loxygen.k".to_string(), vec!["Flisan".to_string()]),
@@ -76,3 +70,12 @@ impl QueryRoot {
         )])
     }
 }
+
+pub fn generate_scheme(service: Service) -> GraphQLScheme {
+    GraphQLScheme::new(
+        Query { service },
+        EmptyMutation::<State>::new(),
+        EmptySubscription::<State>::new(),
+    )
+}
+
