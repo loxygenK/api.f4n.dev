@@ -1,4 +1,6 @@
-#[derive(juniper::GraphQLObject)]
+use serde::{Deserialize, Serialize};
+
+#[derive(juniper::GraphQLObject, Serialize, Deserialize)]
 pub struct Career {
     when: chrono::DateTime<chrono::Utc>,
     title: String,

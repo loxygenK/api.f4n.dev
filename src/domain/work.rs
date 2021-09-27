@@ -1,4 +1,6 @@
-#[derive(juniper::GraphQLEnum)]
+use serde::{Deserialize, Serialize};
+
+#[derive(juniper::GraphQLEnum, Serialize, Deserialize)]
 pub enum Status {
     Advancing,
     Maintenancing,
@@ -6,7 +8,7 @@ pub enum Status {
     Developing,
 }
 
-#[derive(juniper::GraphQLObject)]
+#[derive(juniper::GraphQLObject, Serialize, Deserialize)]
 pub struct Work {
     name: String,
     description: String,
