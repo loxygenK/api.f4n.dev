@@ -1,12 +1,6 @@
 use std::convert::TryInto;
 use std::num::ParseIntError;
 
-use warp::Filter;
-
-use crate::logger;
-use crate::router::generate_scheme;
-use crate::router::state::provide_context;
-
 #[derive(Debug)]
 pub enum ToSegmentError {
     ValueError(ParseIntError),
@@ -20,7 +14,7 @@ pub enum Host<'a> {
 }
 
 impl Host<'_> {
-    fn to_segmented_ip_addr(&self) -> Result<[u8; 4], ToSegmentError> {
+    pub fn to_segmented_ip_addr(&self) -> Result<[u8; 4], ToSegmentError> {
         let ip_addr = match self {
             Host::Localhost => return Ok([127, 0, 0, 1]),
             Host::Ipv4(addr) => addr,
@@ -53,34 +47,4 @@ impl ToString for Host<'_> {
             .collect::<Vec<String>>()
             .join(".")
     }
-}
-
-pub async fn execute_server(host: Host<'_>, port: u16) -> Result<(), ToSegmentError> {
-    let log = warp::log(logger::LOGGER_NAME);
-
-    let scheme = generate_scheme();
-    let scheme_lang = scheme.as_schema_language();
-    let graphql_filter = juniper_warp::make_graphql_filter(
-        scheme,
-        warp::any().map(move || provide_context()).boxed(),
-    );
-
-    logger::info(format!(
-        "🧙 Serving from http://{}:{}",
-        host.to_string(),
-        port
-    ));
-
-    warp::serve(
-        warp::get()
-            .and(warp::path("graphiql"))
-            .and(juniper_warp::graphiql_filter("/graphql", None))
-            .or(warp::path("graphql").and(graphql_filter))
-            .or(warp::path("scheme").map(move || scheme_lang.clone()))
-            .with(log),
-    )
-    .run((host.to_segmented_ip_addr()?, port))
-    .await;
-
-    Ok(())
 }
