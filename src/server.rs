@@ -1,7 +1,6 @@
 use std::convert::TryInto;
 use std::num::ParseIntError;
 
-use log::Level;
 use warp::Filter;
 
 use crate::logger;
