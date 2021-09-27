@@ -1,7 +1,7 @@
 mod domain;
+mod logger;
 mod server;
 mod service;
-mod logger;
 
 use server::execute_server;
 
