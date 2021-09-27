@@ -21,7 +21,7 @@ impl Server {
         let scheme_lang = scheme.as_schema_language();
         let graphql_filter = juniper_warp::make_graphql_filter(
             scheme,
-            warp::any().map(move || provide_context()).boxed(),
+            warp::any().map(provide_context).boxed(),
         );
 
         logger::info(format!(

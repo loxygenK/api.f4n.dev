@@ -4,11 +4,11 @@ use juniper::{EmptyMutation, EmptySubscription, FieldError, FieldResult};
 
 use crate::{
     domain::{
-        basic::{Affiliation, Basic, Name},
+        basic::Basic,
         career::Career,
         contact::Contact,
-        skill::{Skill, SkillType, SkilledLevel},
-        work::{Status, Work},
+        skill::Skill,
+        work::Work,
     },
     service::Service,
 };

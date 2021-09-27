@@ -21,7 +21,7 @@ impl Host<'_> {
         };
 
         let segments = ip_addr
-            .split(".")
+            .split('.')
             .map(|s| s.parse::<u8>())
             .collect::<Result<Vec<u8>, _>>();
 
