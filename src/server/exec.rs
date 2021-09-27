@@ -19,10 +19,8 @@ impl Server {
 
         let scheme = self.query.generate_scheme();
         let scheme_lang = scheme.as_schema_language();
-        let graphql_filter = juniper_warp::make_graphql_filter(
-            scheme,
-            warp::any().map(provide_context).boxed(),
-        );
+        let graphql_filter =
+            juniper_warp::make_graphql_filter(scheme, warp::any().map(provide_context).boxed());
 
         logger::info(format!(
             "🧙 Serving from http://{}:{}",

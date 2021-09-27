@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(juniper::GraphQLObject, Serialize, Deserialize)]
 pub struct Career {

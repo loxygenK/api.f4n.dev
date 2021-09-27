@@ -3,13 +3,7 @@ pub mod state;
 use juniper::{EmptyMutation, EmptySubscription, FieldError, FieldResult};
 
 use crate::{
-    domain::{
-        basic::Basic,
-        career::Career,
-        contact::Contact,
-        skill::Skill,
-        work::Work,
-    },
+    domain::{basic::Basic, career::Career, contact::Contact, skill::Skill, work::Work},
     service::Service,
 };
 

@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(juniper::GraphQLEnum, Serialize, Deserialize)]
 pub enum SkillType {

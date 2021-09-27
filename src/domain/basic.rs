@@ -1,5 +1,5 @@
 use juniper::GraphQLObject;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(GraphQLObject, Serialize, Deserialize)]
 pub struct Basic {

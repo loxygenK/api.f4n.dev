@@ -31,13 +31,11 @@ impl Repository for AssetRepository {
 }
 
 pub fn serialize_yaml<T: DeserializeOwned>(file_name: &str) -> RepositoryResult<T> {
-    let file = File::open(file_name)
-        .map_err(RepositoryError::RetrievingError)?;
+    let file = File::open(file_name).map_err(RepositoryError::RetrievingError)?;
 
     let reader = BufReader::new(file);
 
-    let result = serde_yaml::from_reader(reader)
-        .map_err(RepositoryError::DeserializationError)?;
+    let result = serde_yaml::from_reader(reader).map_err(RepositoryError::DeserializationError)?;
 
     Ok(result)
 }
