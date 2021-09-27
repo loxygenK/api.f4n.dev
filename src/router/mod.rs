@@ -71,11 +71,16 @@ impl Query {
     }
 }
 
-pub fn generate_scheme(service: Service) -> GraphQLScheme {
-    GraphQLScheme::new(
-        Query { service },
-        EmptyMutation::<State>::new(),
-        EmptySubscription::<State>::new(),
-    )
-}
+impl Query {
+    pub fn new(service: Service) -> Self {
+        Self { service }
+    }
 
+    pub fn generate_scheme(self) -> GraphQLScheme {
+        GraphQLScheme::new(
+            self,
+            EmptyMutation::<State>::new(),
+            EmptySubscription::<State>::new(),
+        )
+    }
+}

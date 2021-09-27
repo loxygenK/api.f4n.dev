@@ -20,6 +20,10 @@ pub struct Service {
 type ServiceResult<T> = Result<T, String>;
 
 impl Service {
+    pub fn new(repository: Box<dyn Repository>) -> Self {
+        Self { repository }
+    }
+
     pub fn fetch_basic(&self) -> ServiceResult<Basic> {
         self.repository.fetch_basic()
             .map_err(|e| e.to_string())
