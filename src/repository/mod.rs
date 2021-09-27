@@ -1,8 +1,14 @@
 use crate::domain::{basic::Basic, career::Career, contact::Contact, skill::Skill, work::Work};
 
 pub mod mock;
+mod util;
 
-type RepositoryResult<T> = Result<T, std::io::Error>;
+pub enum RepositoryError {
+    RetrievingError(std::io::Error),
+    DeserializationError(serde_yaml::Error),
+}
+
+type RepositoryResult<T> = Result<T, RepositoryError>;
 
 pub trait Repository {
     fn fetch_basic() -> RepositoryResult<Basic>;
