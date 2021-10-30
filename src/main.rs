@@ -13,7 +13,7 @@ use server::host::Host;
 async fn main() {
     logger::init();
 
-    setup(Mode::Development)
+    setup(Mode::Production)
         .execute_server(Host::Localhost, 8000)
         .await
         .expect("Server failed");
