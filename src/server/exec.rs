@@ -28,13 +28,18 @@ impl Server {
             port
         ));
 
+        let cors = warp::cors()
+            .allow_any_origin() // Safety: This is a public API so this makes sense (I believe)
+            .allow_method(warp::http::Method::GET);
+
         warp::serve(
             warp::get()
                 .and(warp::path("graphiql"))
                 .and(juniper_warp::graphiql_filter("/graphql", None))
                 .or(warp::path("graphql").and(graphql_filter))
                 .or(warp::path("scheme").map(move || scheme_lang.clone()))
-                .with(log),
+                .with(cors)
+                .with(log)
         )
         .run((host.to_segmented_ip_addr()?, port))
         .await;
