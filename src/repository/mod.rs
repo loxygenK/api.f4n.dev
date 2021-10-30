@@ -1,9 +1,10 @@
 use crate::domain::{basic::Basic, career::Career, contact::Contact, skill::Skill, work::Work};
 
 pub mod mock;
+pub mod loxygenk_d;
 
 pub enum RepositoryError {
-    RetrievingError(std::io::Error),
+    RetrievingError(Box<dyn std::error::Error>),
     DeserializationError(serde_yaml::Error),
 }
 
