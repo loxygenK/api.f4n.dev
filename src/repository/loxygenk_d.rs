@@ -36,9 +36,10 @@ impl Repository for LoxygenKDRepository {
 }
 
 fn retrieve_from<T: DeserializeOwned>(path: &str) -> RepositoryResult<T> {
-    let content = reqwest::blocking::get(format!("{}/{}", LOXYGENK_D_PATH, path))
+    let content = ureq::get(&format!("{}/{}", LOXYGENK_D_PATH, path))
+        .call()
         .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?
-        .text()
+        .into_string()
         .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?;
 
     serde_yaml::from_str(&content).map_err(|e| RepositoryError::DeserializationError(e))
