@@ -12,6 +12,7 @@ env_logger = "0.9.0"
 juniper = "0.15.7"
 juniper_warp = "0.7.0"
 log = "0.4.14"
+reqwest = { version = "0.11.6", features = ["blocking"]}
 serde = { version = "1.0.130", features = ["derive"] }
 serde_yaml = "0.8.21"
 tokio = { version = "1.11.0", features = ["macros"] }
