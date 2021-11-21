@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(juniper::GraphQLEnum, Serialize, Deserialize)]
 pub enum Status {
     Advancing,
+    Archived,
     Maintenancing,
     Completed,
     Developing,
