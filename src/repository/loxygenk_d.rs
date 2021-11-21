@@ -10,7 +10,7 @@ use crate::domain::{
 
 use super::{Repository, RepositoryError, RepositoryResult};
 
-const LOXYGENK_D_PATH: &str = "https://raw.githubusercontent.com/loxygenK/loxygenk.d/feat/new-format";
+const LOXYGENK_D_PATH: &str = "https://raw.githubusercontent.com/loxygenK/loxygenk.d/main/";
 
 pub struct LoxygenKDRepository;
 impl Repository for LoxygenKDRepository {
