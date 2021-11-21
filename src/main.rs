@@ -13,7 +13,13 @@ use server::host::Host;
 async fn main() {
     logger::init();
 
-    setup(Mode::Development)
+    let mode = std::env::var("FLISAN_PF_API_MODE").unwrap_or("development".to_string()).to_lowercase();
+    let mode = match mode.as_str() {
+        "development" => Mode::Development,
+        _ => Mode::Production
+    };
+
+    setup(mode)
         .execute_server(Host::Localhost, 8000)
         .await
         .expect("Server failed");

@@ -7,10 +7,14 @@ use crate::{
 
 impl Display for RepositoryError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(match self {
-            RepositoryError::RetrievingError(_) => "Failed to retrievate data!",
-            RepositoryError::DeserializationError(_) => "Database contains invalid data!",
-        })
+        let error_msg = match self {
+            RepositoryError::RetrievingError(e)
+                => format!("Failed to retrievate data!: {}", e.to_string()),
+            RepositoryError::DeserializationError(e)
+                => format!("Database contains invalid data!: {}", e.to_string()),
+        };
+
+        f.write_str(&error_msg)
     }
 }
 

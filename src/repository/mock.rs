@@ -31,7 +31,8 @@ impl Repository for AssetRepository {
 }
 
 pub fn serialize_yaml<T: DeserializeOwned>(file_name: &str) -> RepositoryResult<T> {
-    let file = File::open(file_name).map_err(RepositoryError::RetrievingError)?;
+    let file = File::open(file_name)
+        .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?;
 
     let reader = BufReader::new(file);
 

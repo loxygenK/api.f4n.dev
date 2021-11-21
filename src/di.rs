@@ -1,3 +1,5 @@
+use crate::repository::Repository;
+use crate::repository::loxygenk_d::LoxygenKDRepository;
 use crate::repository::mock::AssetRepository;
 use crate::router::Query;
 use crate::server::exec::Server;
@@ -9,14 +11,10 @@ pub enum Mode {
 }
 
 pub fn setup(mode: Mode) -> Server {
-    match mode {
-        Mode::Development => setup_development(),
-        Mode::Production => unimplemented!(),
-    }
-}
-
-fn setup_development() -> Server {
-    let repository = Box::new(AssetRepository);
+    let repository: Box<dyn Repository> = match mode {
+        Mode::Development => Box::new(AssetRepository),
+        Mode::Production => Box::new(LoxygenKDRepository)
+    };
     let service = Service::new(repository);
     let query = Query::new(service);
 

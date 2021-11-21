@@ -4,17 +4,16 @@ use serde::{Deserialize, Serialize};
 pub enum SkillType {
     Frontend,
     Backend,
-    Mobile,
     Infrastructure,
-    Miscellaneous,
+    Utility,
 }
 
 #[derive(juniper::GraphQLEnum, Serialize, Deserialize)]
 pub enum SkilledLevel {
-    NoLongerUsed,
+    Favorite,
     Advanced,
-    Available,
-    Fundamental,
+    Experienced,
+    Beginner,
     Studying,
 }
 
@@ -23,7 +22,7 @@ pub struct Skill {
     name: String,
     skill_type: SkillType,
     level: SkilledLevel,
-    fa_icon_identifier: String,
+    emoji: String
 }
 
 impl Skill {
@@ -31,13 +30,13 @@ impl Skill {
         name: String,
         skill_type: SkillType,
         level: SkilledLevel,
-        fa_icon_identifier: String,
+        emoji: String
     ) -> Self {
         Self {
             name,
             skill_type,
             level,
-            fa_icon_identifier,
+            emoji
         }
     }
 }
