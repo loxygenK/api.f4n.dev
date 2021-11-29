@@ -24,19 +24,3 @@ pub struct Skill {
     level: SkilledLevel,
     emoji: String
 }
-
-impl Skill {
-    pub fn new(
-        name: String,
-        skill_type: SkillType,
-        level: SkilledLevel,
-        emoji: String
-    ) -> Self {
-        Self {
-            name,
-            skill_type,
-            level,
-            emoji
-        }
-    }
-}
