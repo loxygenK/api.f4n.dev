@@ -2,7 +2,14 @@ pub mod state;
 
 use self::state::State;
 use crate::{
-    domain::{basic::Basic, blog::BlogHeader, career::Career, contact::Contact, skill::Skill, work::Work},
+    domain::{
+        basic::Basic,
+        blog::{Blog, BlogHeader},
+        career::Career,
+        contact::Contact,
+        skill::Skill,
+        work::Work
+    },
     service::Service,
 };
 use juniper::{EmptyMutation, EmptySubscription, FieldError, FieldResult};
@@ -22,6 +29,10 @@ impl Query {
 
     fn blog_property(&self, _state: &State) -> FieldResult<Vec<BlogHeader>> {
         self.service.fetch_blog().map_err(Query::to_field_error)
+    }
+
+    fn blog_body(&self, _state: &State, slug: String) -> FieldResult<Blog> {
+        self.service.fetch_blog_body(&slug).map_err(Query::to_field_error)
     }
 
     fn careers(&self, _state: &State) -> FieldResult<Vec<Career>> {

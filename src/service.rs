@@ -1,7 +1,14 @@
 use std::fmt::Display;
 
 use crate::{
-    domain::{basic::Basic, blog::BlogHeader, career::Career, contact::Contact, skill::Skill, work::Work},
+    domain::{
+        basic::Basic,
+        blog::{Blog, BlogHeader},
+        career::Career,
+        contact::Contact,
+        skill::Skill,
+        work::Work
+    },
     repository::{Repository, RepositoryError},
 };
 
@@ -35,6 +42,15 @@ impl Service {
 
     pub fn fetch_blog(&self) -> ServiceResult<Vec<BlogHeader>> {
         self.repository.fetch_blog().map_err(|e| e.to_string())
+    }
+
+    pub fn fetch_blog_body(&self, slug: &str) -> ServiceResult<Blog> {
+        let blog = self.repository.fetch_blog_body(slug).map_err(|e| e.to_string())?;
+
+        match blog {
+            Some(b) => Ok(b),
+            None => Err("Blog with provided slug is not found.".to_string())
+        }
     }
 
     pub fn fetch_careers(&self) -> ServiceResult<Vec<Career>> {

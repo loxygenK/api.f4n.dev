@@ -2,7 +2,7 @@ use serde::de::DeserializeOwned;
 
 use crate::domain::{
     basic::Basic,
-    blog::BlogHeader,
+    blog::{Blog, BlogHeader},
     career::Career,
     contact::Contact,
     skill::Skill,
@@ -21,6 +21,20 @@ impl Repository for LoxygenKDRepository {
 
     fn fetch_blog(&self) -> super::RepositoryResult<Vec<BlogHeader>> {
        retrieve_from("blog/registry.yaml")
+    }
+
+    fn fetch_blog_body(&self, slug: &str) -> RepositoryResult<Option<Blog>> {
+        let blog_headers: Vec<BlogHeader> = retrieve_from("blog/registry.yaml")?;
+        let header = blog_headers
+            .into_iter()
+            .find(|h| h.slug == slug);
+
+        match header {
+            Some(h) => Ok(Some(Blog::new(
+                h, retrieve(&format!("blog/{}.md", slug))?
+            ))),
+            None => Ok(None)
+        }
     }
 
     fn fetch_careers(&self) -> super::RepositoryResult<Vec<Career>> {

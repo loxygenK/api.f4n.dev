@@ -1,6 +1,13 @@
-use crate::domain::{basic::Basic, blog::BlogHeader, career::Career, contact::Contact, skill::Skill, work::Work};
+use crate::domain::{
+    basic::Basic,
+    blog::{Blog, BlogHeader},
+    career::Career,
+    contact::Contact,
+    skill::Skill,
+    work::Work
+};
 
-use std::{fs::File, io::BufReader};
+use std::{fs::File, io::BufReader, io::Read};
 
 use serde::de::DeserializeOwned;
 
@@ -15,6 +22,21 @@ impl Repository for AssetRepository {
 
     fn fetch_blog(&self) -> RepositoryResult<Vec<BlogHeader>> {
         serialize_yaml("asset/blog/registry.yaml")
+    }
+
+    fn fetch_blog_body(&self, slug: &str) -> RepositoryResult<Option<Blog>> {
+        let blog_headers: Vec<BlogHeader> = dbg!(serialize_yaml("asset/blog/registry.yaml"))?;
+
+        let header = blog_headers
+            .into_iter()
+            .find(|h| h.slug == slug);
+
+        match header {
+            Some(h) => Ok(Some(Blog::new(
+                h, read_file(&format!("asset/blog/{}.md", slug))?
+            ))),
+            None => Ok(None)
+        }
     }
 
     fn fetch_careers(&self) -> RepositoryResult<Vec<Career>> {
@@ -34,13 +56,19 @@ impl Repository for AssetRepository {
     }
 }
 
-pub fn serialize_yaml<T: DeserializeOwned>(file_name: &str) -> RepositoryResult<T> {
+pub fn read_file(file_name: &str) -> RepositoryResult<String> {
     let file = File::open(file_name)
         .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?;
+    let mut reader = BufReader::new(file);
 
-    let reader = BufReader::new(file);
+    let mut text = String::new();
+    reader.read_to_string(&mut text)
+        .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?;
 
-    let result = serde_yaml::from_reader(reader).map_err(RepositoryError::DeserializationError)?;
+    Ok(text)
+}
 
-    Ok(result)
+pub fn serialize_yaml<T: DeserializeOwned>(file_name: &str) -> RepositoryResult<T> {
+    serde_yaml::from_str(&read_file(file_name)?)
+        .map_err(RepositoryError::DeserializationError)
 }
