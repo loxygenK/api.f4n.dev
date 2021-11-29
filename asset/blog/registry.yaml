@@ -1,0 +1,8 @@
+- slug: my-favorite-blog
+  title: My favorite blog
+  emoji: 👋
+  posted: 2021-11-01T00:00:00Z
+  tags:
+    - test
+    - blog
+  file: ./my-favorite-blog.md

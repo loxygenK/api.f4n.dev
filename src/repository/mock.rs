@@ -1,4 +1,4 @@
-use crate::domain::{basic::Basic, career::Career, contact::Contact, skill::Skill, work::Work};
+use crate::domain::{basic::Basic, blog::BlogHeader, career::Career, contact::Contact, skill::Skill, work::Work};
 
 use std::{fs::File, io::BufReader};
 
@@ -11,6 +11,10 @@ pub struct AssetRepository;
 impl Repository for AssetRepository {
     fn fetch_basic(&self) -> RepositoryResult<Basic> {
         serialize_yaml("asset/basic.yaml")
+    }
+
+    fn fetch_blog(&self) -> RepositoryResult<Vec<BlogHeader>> {
+        serialize_yaml("asset/blog/registry.yaml")
     }
 
     fn fetch_careers(&self) -> RepositoryResult<Vec<Career>> {

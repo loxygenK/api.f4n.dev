@@ -2,6 +2,7 @@ use serde::de::DeserializeOwned;
 
 use crate::domain::{
     basic::Basic,
+    blog::BlogHeader,
     career::Career,
     contact::Contact,
     skill::Skill,
@@ -16,6 +17,10 @@ pub struct LoxygenKDRepository;
 impl Repository for LoxygenKDRepository {
     fn fetch_basic(&self) -> super::RepositoryResult<Basic> {
         retrieve_from("basic.yaml")
+    }
+
+    fn fetch_blog(&self) -> super::RepositoryResult<Vec<BlogHeader>> {
+       retrieve_from("blog/registry.yaml")
     }
 
     fn fetch_careers(&self) -> super::RepositoryResult<Vec<Career>> {
@@ -35,12 +40,17 @@ impl Repository for LoxygenKDRepository {
     }
 }
 
-fn retrieve_from<T: DeserializeOwned>(path: &str) -> RepositoryResult<T> {
-    let content = ureq::get(&format!("{}/{}", LOXYGENK_D_PATH, path))
-        .call()
-        .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?
-        .into_string()
-        .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?;
+fn retrieve(path: &str) -> RepositoryResult<String> {
+    Ok(
+        ureq::get(&format!("{}/{}", LOXYGENK_D_PATH, path))
+            .call()
+            .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?
+            .into_string()
+            .map_err(|e| RepositoryError::RetrievingError(Box::new(e)))?
+    )
+}
 
+fn retrieve_from<T: DeserializeOwned>(path: &str) -> RepositoryResult<T> {
+    let content = retrieve(path)?;
     serde_yaml::from_str(&content).map_err(|e| RepositoryError::DeserializationError(e))
 }
