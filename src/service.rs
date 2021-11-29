@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use crate::{
-    domain::{basic::Basic, career::Career, contact::Contact, skill::Skill, work::Work},
+    domain::{basic::Basic, blog::BlogHeader, career::Career, contact::Contact, skill::Skill, work::Work},
     repository::{Repository, RepositoryError},
 };
 
@@ -31,6 +31,10 @@ impl Service {
 
     pub fn fetch_basic(&self) -> ServiceResult<Basic> {
         self.repository.fetch_basic().map_err(|e| e.to_string())
+    }
+
+    pub fn fetch_blog(&self) -> ServiceResult<Vec<BlogHeader>> {
+        self.repository.fetch_blog().map_err(|e| e.to_string())
     }
 
     pub fn fetch_careers(&self) -> ServiceResult<Vec<Career>> {
